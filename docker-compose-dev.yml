@@ -27,3 +27,23 @@ services:
 
     env_file:
       - .env
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    env_file:
+      - .env
+
+  worker:
+    build:
+      context: .
+
+    volumes:
+      - .:/src
+
+    command: celery -A app.celery_config:celery_app worker --loglevel=info
+
+    depends_on:
+        - redis
+    env_file:
+      - .env
