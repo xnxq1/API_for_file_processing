@@ -25,3 +25,8 @@ class SchemasUser(BaseModel):
 
 class SchemasUserForRegister(SchemasUser):
     password: str
+
+
+class SchemasUserForAuth(BaseModel):
+    email: EmailStr
+    password: str

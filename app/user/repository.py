@@ -17,9 +17,17 @@ class RepoUser:
             return result.scalar_one_or_none()
 
     @classmethod
+    async def get_user_by_id(cls, user_id: int):
+        async with async_sessionfactory() as session:
+            query = select(cls.model).where(cls.model.id == user_id)
+            result = await session.execute(query)
+            return result.scalar_one_or_none()
+
+    @classmethod
     async def add_user(cls, **data):
         async with async_sessionfactory() as session:
             stmt = insert(cls.model).values(**data).returning(cls.model)
             result = await session.execute(stmt)
             await session.commit()
             return result.scalar_one()
+

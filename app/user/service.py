@@ -1,21 +1,9 @@
-from app.user.dao import RepoUser
+from app.user.repository import RepoUser
 from app.user.errors import ThereIsAUserError, WrongDataError
-
-from passlib.context import CryptContext
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from app.user.auth import Hasher
 
 
-class Hasher:
 
-    @staticmethod
-    def verify_password(plain_password: str, hashed_password: str) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
-
-    @staticmethod
-    def get_password_hash(password: str) -> str:
-        return pwd_context.hash(password)
 
 
 async def service_register_user(user_data: dict):
@@ -29,3 +17,10 @@ async def service_register_user(user_data: dict):
             return result
         except:
             raise WrongDataError()
+
+
+async def login_user_service(user_data: dict) -> int:
+    user = await RepoUser.get_user_by_email(user_data['email'])
+    if not user or not Hasher.verify_password(user_data['password'], user.password):
+        raise WrongDataError()
+    return user.id

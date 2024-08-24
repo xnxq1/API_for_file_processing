@@ -9,3 +9,5 @@ pydantic>=2.7.3
 pydantic-settings>=2.4.0
 pydantic[email]>=2.7.3
 passlib>=1.7.3
+python-multipart>=0.0.9
+python-jose>=3.3.0
