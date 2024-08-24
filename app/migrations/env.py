@@ -9,6 +9,7 @@ from alembic import context
 
 from app.config import settings
 from app.models import Base, DefaultBase
+from app.user.models import User
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
