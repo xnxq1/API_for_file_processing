@@ -8,3 +8,4 @@ uvicorn>=0.30.4
 pydantic>=2.7.3
 pydantic-settings>=2.4.0
 pydantic[email]>=2.7.3
+passlib>=1.7.3

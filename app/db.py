@@ -1,5 +1,4 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.ext.mypy.names import DECLARATIVE_BASE
 
 from app.config import settings
 
