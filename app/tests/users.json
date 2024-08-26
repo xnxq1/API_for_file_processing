@@ -1,0 +1,16 @@
+[
+  {
+    "email": "test1@test.com",
+    "password":"$2b$12$2C5/CSPKlRC00x0dn/1RmeLZwaznrq1OdztZRWeZwN1vsZHyXnZ/C",
+    "username": "Dominik Toretto",
+    "date_of_birth": "2000-08-26",
+    "phone_number": "+777777777"
+  },
+  {
+    "email": "test2@test.com",
+    "password":"$2b$12$2C5/CSPKlRC00x0dn/1RmeLZwaznrq1OdztZRWeZwN1vsZHyXnZ/C",
+    "username": "Rayan Gosling",
+    "date_of_birth": "2020-08-26",
+    "phone_number": "+7686787687"
+  }
+]
