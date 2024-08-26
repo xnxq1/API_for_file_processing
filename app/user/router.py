@@ -17,7 +17,7 @@ async def register_user(user: SchemasUserForRegister) -> SchemasUser:
 async def login_user(request: Request, responce: Response, user: SchemasUserForAuth) -> str:
 
     user_id = await login_user_service(dict(user))
-    return JWTCookies.set_cookie_jwt(request, responce, user_id)
+    return JWTCookies.set_cookie_jwt(responce, user_id)
 
 
 @router.post("/logout")

@@ -45,9 +45,7 @@ class JWTBase:
 class JWTCookies(JWTBase):
 
     @classmethod
-    def set_cookie_jwt(cls, request: Request, responce: Response, user_id: int) -> str:
-        if request.cookies.get('access_token'):
-            raise JWTCustomError(message='Вы уже авторизованы')
+    def set_cookie_jwt(cls, responce: Response, user_id: int) -> str:
         token = cls.encode_jwt_token({'sub': str(user_id)})
         responce.set_cookie(key='access_token', value=token, httponly=True)
         return token
