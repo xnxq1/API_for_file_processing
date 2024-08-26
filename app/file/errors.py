@@ -10,3 +10,12 @@ class ResponseError(BaseCustomError):
 class NotUniqueFileNameError(BaseCustomError):
     status_code = 400
     message = 'У вас уже есть файл с таким именем и форматом'
+
+class NoneFileError(BaseCustomError):
+    status_code = 400
+    message = 'Такого файла не существует'
+
+
+class NotDownloadFileError(BaseCustomError):
+    status_code = 400
+    message = 'Файл можно удалить только после полного скачивания'

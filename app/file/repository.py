@@ -28,8 +28,15 @@ class RepoFile:
             await session.commit()
 
     @classmethod
-    async def get_user_files(cls, user_id: int):
+    async def get_files(cls, **data):
         async with async_sessionfactory() as session:
-            stmt = select(cls.model).where(cls.model.author_id == user_id)
+            stmt = select(cls.model).filter_by(**data)
             res = await session.execute(stmt)
             return res.scalars().all()
+
+    @classmethod
+    async def get_file(cls, **data):
+        async with async_sessionfactory() as session:
+            stmt = select(cls.model).filter_by(**data)
+            res = await session.execute(stmt)
+            return res.scalar_one_or_none()

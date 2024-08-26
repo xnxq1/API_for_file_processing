@@ -3,7 +3,7 @@ from pathlib import Path
 import requests
 import aiohttp
 from aiohttp import ClientResponseError
-from app.file.errors import ResponseError, NotUniqueFileNameError
+from app.file.errors import ResponseError, NotUniqueFileNameError, NoneFileError, NotDownloadFileError
 from app.file.repository import RepoFile
 
 
@@ -22,8 +22,15 @@ async def get_headers_from_url(url):
         return response
 
 
-def service_delete_file(name, format):
-    file_path = Path(f'app/static/{name}.{format}')
+async def service_delete_file(name, format, user_id):
+    file = await RepoFile.get_file(name=name, format=format, author_id=user_id)
+    if file is None:
+        raise NoneFileError()
+    file_dict = file.__dict__
+    if not file_dict['is_download']:
+        raise NotDownloadFileError()
+    await RepoFile.delete_file(name=name, format=format, author_id=user_id)
+    file_path = Path(f'app/static/{user_id}_{name}.{format}')
     try:
         file_path.unlink()
     except:
