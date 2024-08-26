@@ -1,4 +1,4 @@
-from sqlalchemy import insert, update, delete
+from sqlalchemy import insert, update, delete, select
 
 from app.file.models import FileUser
 from app.db import async_sessionfactory
@@ -26,3 +26,10 @@ class RepoFile:
             stmt = delete(cls.model).filter_by(**data)
             await session.execute(stmt)
             await session.commit()
+
+    @classmethod
+    async def get_user_files(cls, user_id: int):
+        async with async_sessionfactory() as session:
+            stmt = select(cls.model).where(cls.model.author_id == user_id)
+            res = await session.execute(stmt)
+            return res.scalars().all()

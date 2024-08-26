@@ -12,3 +12,10 @@ class FileUpload(BaseModel):
         if not url.startswith(('http://', 'https://')):
             raise ValueError('url должен начинаться с http://')
         return url
+
+
+class SchemasFileForUser(BaseModel):
+    name: str
+    format: str
+    size: int
+    is_download: bool
