@@ -5,6 +5,7 @@ import os
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy import insert
 
+from app.file.models import FileUser
 from app.main import app as fastapi_app
 from app.db import engine, async_sessionfactory
 from app.models import Base
@@ -25,11 +26,14 @@ async def prepare_db():
             return json.load(f)
 
     users = convert_json('users')
+    files = convert_json('files')
     for user in users:
         user['date_of_birth'] = datetime.strptime(user['date_of_birth'], '%Y-%m-%d')
     async with async_sessionfactory() as session:
         users_query = insert(User).values(users)
+        files_query = insert(FileUser).values(files)
         await session.execute(users_query)
+        await session.execute(files_query)
         await session.commit()
 
 

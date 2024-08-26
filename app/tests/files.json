@@ -1,0 +1,16 @@
+[
+  {
+    "name": "test",
+    "format": "png",
+    "size": 1,
+    "author_id": 1,
+    "is_download": false
+  },
+  {
+    "name": "test2",
+    "format": "json",
+    "size": 1,
+    "author_id": 2,
+    "is_download": false
+  }
+]
