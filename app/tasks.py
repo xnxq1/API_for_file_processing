@@ -30,7 +30,7 @@ def download_chunk(url, start, end, file_name, errors):
 
 # ПОТОКИ В СРЕДНЕМ 49 СЕКУНД НА 500 МБ ФАЙЛ
 @shared_task
-def download_file(name, format, url, file_size, user_id, num_chunks=4):
+def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
     url_for_download = f'app/static/{user_id}_{name}.{format}'
     errors = []
     with open(url_for_download, 'wb') as file:

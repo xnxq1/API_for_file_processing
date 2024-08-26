@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import requests
@@ -42,3 +43,11 @@ async def service_add_file(**data):
         await RepoFile.add_file(**data)
     except:
         raise NotUniqueFileNameError()
+
+
+def get_file_path(name, format, user_id):
+    file_path = f"app/static/{user_id}_{name}.{format}"
+
+    if not os.path.exists(file_path):
+        raise NoneFileError()
+    return file_path
