@@ -26,7 +26,7 @@ def download_chunk(url, start, end, file_name, errors):
     except BaseException as e:
         errors.append(e)
 
-#ПОТОКИ В СРЕДНЕМ 49 СЕКУНД НА 500 МБ ФАЙЛ
+#ПОТОКИ В СРЕДНЕМ 140 СЕКУНД НА 1400 МБ ФАЙЛ
 @shared_task
 def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
     url_for_download = f'app/static/{user_id}_{name}.{format}'
@@ -46,22 +46,21 @@ def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
         # Ждем завершения всех задач
         for thread in threads:
             thread.result()
-
     loop = asyncio.get_event_loop()
     if loop.is_closed():
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
     if errors:
-        service_delete_file(name=name, format=format)
+        service_delete_file(name=name, format=format, user_id=user_id)
         loop.run_until_complete(RepoFile.delete_file(name=name, format=format, author_id=user_id))
     else:
         loop.run_until_complete(RepoFile.change_status(True, name=name, format=format, author_id=user_id))
 
 
-# ПРОЦЕССЫ В СРЕДНЕМ 46 СЕКУНД НА 500 МБ ФАЙЛ
+# ПРОЦЕССЫ В СРЕДНЕМ 186 СЕКУНД НА 1400 МБ ФАЙЛ
 # @shared_task
-# def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
+# def task_download_file(name, format, url, file_size, user_id, num_chunks=2):
 #     url_for_download = f'app/static/{user_id}_{name}.{format}'
 #     errors = []
 #     with open(url_for_download, 'wb') as file:
@@ -70,17 +69,12 @@ def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
 #     chunk_size = file_size // num_chunks
 #
 #
-#     process = []
-#     for i in range(num_chunks):
-#         start = i * chunk_size
-#         end = start + chunk_size - 1 if i != num_chunks - 1 else ''
-#         proc = multiprocessing.Process(target=download_chunk, args=(url, start, end, url_for_download, errors))
-#         process.append(proc)
-#         proc.start()
-#
-#     # Ждем завершения всех задач
-#     for proc in process:
-#         proc.join()
+#     with multiprocessing.Pool(num_chunks) as p:
+#         p.starmap(download_chunk, iterable=(
+#             (url, i * chunk_size, i * chunk_size + chunk_size - 1 if i != num_chunks - 1 else '', url_for_download, errors)
+#             for i in range(num_chunks)))
+#         p.close()
+#         p.join()
 #
 #     loop = asyncio.get_event_loop()
 #     if loop.is_closed():
@@ -88,14 +82,14 @@ def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
 #         asyncio.set_event_loop(loop)
 #
 #     if errors:
-#         service_delete_file(name=name, format=format)
+#         service_delete_file(name=name, format=format, user_id=user_id)
 #         loop.run_until_complete(RepoFile.delete_file(name=name, format=format, author_id=user_id))
 #     else:
 #         loop.run_until_complete(RepoFile.change_status(True, name=name, format=format, author_id=user_id))
 
-# СТАНДАРТНЫЙ ВАРИАНТ В СРЕДНЕМ 50 СЕКУНД НА 500 МБ ФАЙЛ
+# СТАНДАРТНЫЙ ВАРИАНТ В СРЕДНЕМ 241 СЕКУНД НА 1400 МБ ФАЙЛ
 # @shared_task
-# def download_file(name, format, url, file_size, user_id):
+# def task_download_file(name, format, url, file_size, user_id):
 #     url_for_download = f'app/static/{name}.{format}'
 #     errors = []
 #     with open(url_for_download, 'wb') as file:
@@ -112,11 +106,11 @@ def task_download_file(name, format, url, file_size, user_id, num_chunks=4):
 #         asyncio.set_event_loop(loop)
 #
 #     if errors:
-#         service_delete_file(name=name, format=format)
+#         service_delete_file(name=name, format=format, user_id=user_id)
 #         loop.run_until_complete(RepoFile.delete_file(name=name, format=format, author_id=user_id))
 #     else:
 #         loop.run_until_complete(RepoFile.change_status(True, name=name, format=format, author_id=user_id))
-
+#
 
 
 
